@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgba(64, 143, 143, 0.831);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.hide {
+    visibility: hidden;
+}
+
+#gover {
+    color: rgb(90, 84, 84);
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%);
+   
+}
+
+#container {
+    height: 330px;
+    width: 330px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#container .box {
+    height: 102px;
+    width: 102px;
+    /* border-radius: 8px; */
+    border: none;
+    outline: none;
+    outline: 1px solid black;
+    cursor: pointer;
+    border: 1px solid black;
+    color: rgb(189, 51, 51);
+    background-color: white;
+    font-size: 2.5rem;
+    box-shadow: 0 0 20px rgba(105, 132, 150, 0.918);
+    transition: 0.5s all;
+    &:hover{
+        outline-offset: -5px;
+        box-shadow: 0 0 20px rgba(58, 75, 87, 0.918);
+    }
+
+}
+
+#reset {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px;
+    width: 140px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid black;
+    &:hover {
+        transition: 0.5s ease-in-out all;
+        background-color: rgba(145, 119, 119, 0.518);
+    }
+}
+
+.newgame {
+    padding: 12px;
+    margin-top: 5px;
+    background-color: rgb(114, 102, 102);
+    font-weight: 700;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: 35px;
+    color: rgb(207, 201, 201);
+
+    &:hover {
+        /* transition: 0.5s all; */
+        background-color: rgb(78, 69, 69);
+    }
+}
+
+#h2 {
+    margin-left: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+    </style>
+</head>
+
+<body>
+    <main>
+        <div id="gover" class="hide">
+            <h1>Game Over</h1>
+            <h2 id="h2"></h2>
+            <button id="n-game" class="newgame">New Game</button>
+        </div>
+        <div id="container">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+        </div>
+        <button id="reset">Reset</button>
+    </main>
+
+    <script>
+
+let container = document.getElementById("container");
+let newgame = document.getElementById("n-game");
+let boxes = document.querySelectorAll(".box");
+let reset = document.getElementById("reset");
+let gover = document.getElementById("gover");
+let win = document.getElementById("h2");
+let player1 = true;
+//winning patterns.....
+const winPatterns = [
+    [0, 1, 2],
+    [0, 3, 6],
+    [0, 4, 8],
+    [1, 4, 7],
+    [2, 5, 8],
+    [2, 4, 6],
+    [3, 4, 5],
+    [6, 7, 8],
+];
+boxes.forEach((box) => {
+    box.addEventListener("click", () => {
+        if (player1) {
+            box.innerText = "O";
+            player1 = false;
+        }
+        else {
+            box.innerHTML = "&#10008;";
+            player1 = true;
+        }
+        box.disabled = "true";
+        check();
+    });
+});
+//checking patterns...
+const check = () => {
+    for (let pattern of winPatterns) {
+        let p1 = boxes[pattern[0]].innerText;
+        let p2 = boxes[pattern[1]].innerText;
+        let p3 = boxes[pattern[2]].innerText;
+        if (p1 != "" && p2 != "" && p3 != "") {
+            if (p1 === p2 && p2 === p3) {
+                console.log("winner is ", p1);
+                boxes.forEach((box) => {
+                    box.disabled = true;
+                })
+                win.innerHTML = `Winner is ${p1}   <span id="rot">&#127988;</span>`;
+                setTimeout("wait()", 300);
+            }
+        }
+    }
+}
+//wait....
+function wait() {
+    container.classList.add("hide");
+    gover.classList.remove("hide");
+    reset.classList.add("hide");
+}
+//reset button....
+let rset = () => {
+    player1 = true;
+    boxes.forEach((box) => {
+        box.disabled = false;
+        box.innerText = "";
+    })
+}
+//new game button....
+let ngame = () => {
+    player1 = true;
+    gover.classList.add("hide");
+    container.classList.remove("hide");
+    reset.classList.remove("hide");
+
+    boxes.forEach((box) => {
+        box.disabled = false;
+        box.innerText = "";
+    })
+}
+//event listener...
+reset.addEventListener("click", rset);
+newgame.addEventListener("click", ngame);
+
+    </script>
+</body>
+
+</html>
